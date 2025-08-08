@@ -400,7 +400,6 @@
     <div class="container">
         <header class="header">
             <div class="logo-area">
-                <div class="logo-icon"></div>
                 <div class="logo-text">Ingeborg Streng</div>
             </div>
             <h1>Dagelijkse Habit Tracker</h1>
@@ -494,8 +493,12 @@
             // Set today's date
             document.getElementById('date').value = new Date().toISOString().split('T')[0];
             
-            // Load example data if no entries exist
-            if (entries.length === 0) {
+            // Load data from localStorage
+            const savedEntries = localStorage.getItem('habitTrackerEntries');
+            if (savedEntries) {
+                entries = JSON.parse(savedEntries);
+            } else {
+                // Load example data only if no saved data exists
                 entries = [
                     {
                         id: 1,
@@ -516,6 +519,8 @@
                         tevredenheid: 8
                     }
                 ];
+                // Save example data
+                localStorage.setItem('habitTrackerEntries', JSON.stringify(entries));
             }
             
             updateUI();
@@ -548,6 +553,9 @@
             } else {
                 entries.unshift(newEntry);
             }
+            
+            // Save to localStorage
+            localStorage.setItem('habitTrackerEntries', JSON.stringify(entries));
             
             // Reset form
             document.getElementById('entryForm').reset();
@@ -644,6 +652,8 @@
         function deleteEntry(id) {
             if (confirm('Weet je zeker dat je deze entry wilt verwijderen?')) {
                 entries = entries.filter(entry => entry.id !== id);
+                // Save to localStorage
+                localStorage.setItem('habitTrackerEntries', JSON.stringify(entries));
                 updateUI();
             }
         }
