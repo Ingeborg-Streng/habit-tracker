@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dagelijkse Habit Tracker</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkRhZ2VsaWprc2UgSGFiaXQgVHJhY2tlciIsCiAgInNob3J0X25hbWUiOiAiSGFiaXQgVHJhY2tlciIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzI1NjNlYiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1qVTJJaUJvWldsbmFIUTlJakkyTmlJZ1ptbHNiRDBpSXpJMU5qTmxZaUlnZG1sbGQwSnZlRDBpTUNBd0lESTFOaUF5TlRZaVBpQXZQZz09IiwKICAgICAgInNpemVzIjogIjI1NngyNTYiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    <meta name="theme-color" content="#7b2e3c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Habit Tracker">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fdf6f0 0%, #be6f7b 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #7b2e3c;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .logo-area {
+            background: linear-gradient(45deg, #7b2e3c, #be6f7b);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(123, 46, 60, 0.3);
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .logo-icon {
+            width: 35px;
+            height: 35px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMikiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CjxnIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiPgo8Y2lyY2xlIGN4PSI1IiBjeT0iNSIgcj0iMS41Ii8+CjxjaXJjbGUgY3g9IjEwIiBjeT0iMyIgcj0iMS4yIi8+CjxjaXJjbGUgY3g9IjE1IiBjeT0iNyIgcj0iMS44Ii8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iNCIgcj0iMS4zIi8+CjxjaXJjbGUgY3g9IjI1IiBjeT0iOCIgcj0iMS42Ii8+CjxjaXJjbGUgY3g9IjMwIiBjeT0iNSIgcj0iMS40Ii8+CjxjaXJjbGUgY3g9IjM1IiBjeT0iOSIgcj0iMS43Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNiIgcj0iMS41Ii8+CjxjaXJjbGUgY3g9IjQ1IiBjeT0iMTAiIHI9IjEuOCIvPgo8Y2lyY2xlIGN4PSI1MCIgY3k9IjciIHI9IjEuNiIvPgo8Y2lyY2xlIGN4PSI1NSIgY3k9IjExIiByPSIxLjkiLz4KPHN2Zz4KPHN2Zz4=') center/cover;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        h1 {
+            font-size: 24px;
+            color: #7b2e3c;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #be6f7b;
+            font-size: 14px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab.active {
+            background: #7b2e3c;
+            color: white;
+            box-shadow: 0 2px 10px rgba(123, 46, 60, 0.3);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #7b2e3c;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #7b2e3c;
+            box-shadow: 0 0 0 3px rgba(123, 46, 60, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 80px;
+        }
+        
+        .slider-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #7b2e3c;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .slider-value {
+            background: #7b2e3c;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #7b2e3c, #be6f7b);
+            color: white;
+            box-shadow: 0 5px 15px rgba(123, 46, 60, 0.3);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(123, 46, 60, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #d1d5db;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .entry-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .entry-date {
+            font-weight: 600;
+            color: #7b2e3c;
+        }
+        
+        .entry-score {
+            background: #fdf6f0;
+            color: #7b2e3c;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #be6f7b;
+        }
+        
+        .entry-sections {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .entry-section {
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+        
+        .entry-section.gebeurtenis {
+            background: #fdf6f0;
+            border-color: #df8983;
+        }
+        
+        .entry-section.gevoel {
+            background: rgba(190, 111, 123, 0.1);
+            border-color: #be6f7b;
+        }
+        
+        .entry-section.gedrag {
+            background: rgba(223, 137, 131, 0.1);
+            border-color: #df8983;
+        }
+        
+        .entry-section.gevolg {
+            background: rgba(123, 46, 60, 0.05);
+            border-color: #7b2e3c;
+        }
+        
+        .entry-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+        
+        .entry-section p {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #7b2e3c;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #be6f7b;
+            margin-top: 5px;
+        }
+        
+        .tip-card {
+            background: linear-gradient(45deg, #fdf6f0, rgba(223, 137, 131, 0.2));
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #be6f7b;
+        }
+        
+        .tip-card h4 {
+            color: #7b2e3c;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .tip-card p {
+            color: #7b2e3c;
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #be6f7b;
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        .delete-btn:hover {
+            background: #fef2f2;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .nav-tab {
+                font-size: 12px;
+                padding: 10px 6px;
+            }
+            
+            .form-input, .form-textarea {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo-icon"></div>
+                <div class="logo-text">Ingeborg Streng</div>
+            </div>
+            <h1>Dagelijkse Habit Tracker</h1>
+            <p class="subtitle">Krijg grip op je gebeurtenissen, gevoel, gedrag en gevolg</p>
+        </header>
+        
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('vandaag')">Vandaag</button>
+            <button class="nav-tab" onclick="showTab('geschiedenis')">Geschiedenis</button>
+            <button class="nav-tab" onclick="showTab('statistieken')">Inzichten</button>
+        </nav>
+        
+        <div id="vandaag" class="tab-content active">
+            <div class="card">
+                <form id="entryForm">
+                    <div class="form-group">
+                        <label class="form-label">📅 Datum</label>
+                        <input type="date" id="date" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">📍 Gebeurtenis (Wat gebeurde er?)</label>
+                        <textarea id="gebeurtenis" class="form-textarea" placeholder="Bijvoorbeeld: Moeilijk gesprek met collega, deadline project, uitnodiging voor feestje..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">💭 Gevoel (Wat voel/voelde je?)</label>
+                        <textarea id="gevoel" class="form-textarea" placeholder="Bijvoorbeeld: Zenuwachtig, opgelucht, teleurgesteld, trots, overweldigd..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">🎯 Gedrag (Wat deed je? Hoe reageerde je?)</label>
+                        <textarea id="gedrag" class="form-textarea" placeholder="Bijvoorbeeld: Presentatie goed voorbereid, diep ademgehaald voor start..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">🎭 Gevolg (Wat was het resultaat?)</label>
+                        <textarea id="gevolg" class="form-textarea" placeholder="Bijvoorbeeld: Presentatie ging goed, voelde me zekerder, kreeg positieve feedback..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">⭐ Tevredenheid over vandaag (1-10)</label>
+                        <div class="slider-group">
+                            <input type="range" id="tevredenheid" class="slider" min="1" max="10" value="5">
+                            <span id="tevredenheidValue" class="slider-value">5</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        ✅ Entry Opslaan
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div id="geschiedenis" class="tab-content">
+            <div id="entriesList">
+                <!-- Entries will be loaded here -->
+            </div>
+        </div>
+        
+        <div id="statistieken" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="avgSatisfaction">0.0</div>
+                    <div class="stat-label">Gemiddelde Tevredenheid</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalEntries">0</div>
+                    <div class="stat-label">Dagen Bijgehouden</div>
+                </div>
+            </div>
+            
+            <div class="tip-card">
+                <h4>💡 Tip</h4>
+                <p>Let op terugkerende patronen in je gevoelens en gedrag. Welke gedragingen leiden tot betere gevolgen?</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>🔍 Reflectie</h4>
+                <p>Bekijk je entries van de afgelopen week. Welke dagen waren het meest bevredigend en waarom?</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let entries = [];
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+            
+            // Load example data if no entries exist
+            if (entries.length === 0) {
+                entries = [
+                    {
+                        id: 1,
+                        date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+                        gebeurtenis: 'Belangrijke presentatie op werk',
+                        gevoel: 'Gestrest over deadline',
+                        gedrag: 'Te lang doorgewerkt, geen pauze genomen',
+                        gevolg: 'Hoofdpijn, slecht geslapen',
+                        tevredenheid: 3
+                    },
+                    {
+                        id: 2,
+                        date: new Date(Date.now() - 172800000).toISOString().split('T')[0],
+                        gebeurtenis: 'Compliment gekregen van manager',
+                        gevoel: 'Energiek en gemotiveerd',
+                        gedrag: 'Vroeg opgestaan, gesport, gezond ontbijt',
+                        gevolg: 'Productieve dag, goed humeur',
+                        tevredenheid: 8
+                    }
+                ];
+            }
+            
+            updateUI();
+        });
+        
+        // Slider update
+        document.getElementById('tevredenheid').addEventListener('input', function() {
+            document.getElementById('tevredenheidValue').textContent = this.value;
+        });
+        
+        // Form submission
+        document.getElementById('entryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newEntry = {
+                id: Date.now(),
+                date: document.getElementById('date').value,
+                gebeurtenis: document.getElementById('gebeurtenis').value,
+                gevoel: document.getElementById('gevoel').value,
+                gedrag: document.getElementById('gedrag').value,
+                gevolg: document.getElementById('gevolg').value,
+                tevredenheid: parseInt(document.getElementById('tevredenheid').value)
+            };
+            
+            // Check if entry for this date already exists
+            const existingIndex = entries.findIndex(entry => entry.date === newEntry.date);
+            
+            if (existingIndex !== -1) {
+                entries[existingIndex] = newEntry;
+            } else {
+                entries.unshift(newEntry);
+            }
+            
+            // Reset form
+            document.getElementById('entryForm').reset();
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('tevredenheid').value = 5;
+            document.getElementById('tevredenheidValue').textContent = '5';
+            
+            updateUI();
+            
+            // Show success message
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ Opgeslagen!';
+            btn.style.background = 'linear-gradient(45deg, #be6f7b, #df8983)';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 2000);
+        });
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            updateUI();
+        }
+        
+        function updateUI() {
+            updateEntriesList();
+            updateStatistics();
+        }
+        
+        function updateEntriesList() {
+            const container = document.getElementById('entriesList');
+            
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nog geen entries. Begin met het bijhouden van je dagelijkse patronen!</div>';
+                return;
+            }
+            
+            container.innerHTML = entries.map(entry => `
+                <div class="entry-item">
+                    <div class="entry-header">
+                        <div class="entry-date">${new Date(entry.date).toLocaleDateString('nl-NL', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long'
+                        })}</div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="entry-score">${entry.tevredenheid}/10</div>
+                            <button class="delete-btn" onclick="deleteEntry(${entry.id})">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="entry-sections">
+                        <div class="entry-section gebeurtenis">
+                            <h4>📍 Gebeurtenis</h4>
+                            <p>${entry.gebeurtenis}</p>
+                        </div>
+                        <div class="entry-section gevoel">
+                            <h4>💭 Gevoel</h4>
+                            <p>${entry.gevoel}</p>
+                        </div>
+                        <div class="entry-section gedrag">
+                            <h4>🎯 Gedrag</h4>
+                            <p>${entry.gedrag}</p>
+                        </div>
+                        <div class="entry-section gevolg">
+                            <h4>🎭 Gevolg</h4>
+                            <p>${entry.gevolg}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateStatistics() {
+            const avgSatisfaction = entries.length > 0 
+                ? (entries.reduce((sum, entry) => sum + entry.tevredenheid, 0) / entries.length).toFixed(1)
+                : '0.0';
+            
+            document.getElementById('avgSatisfaction').textContent = avgSatisfaction;
+            document.getElementById('totalEntries').textContent = entries.length;
+        }
+        
+        function deleteEntry(id) {
+            if (confirm('Weet je zeker dat je deze entry wilt verwijderen?')) {
+                entries = entries.filter(entry => entry.id !== id);
+                updateUI();
+            }
+        }
+    </script>
+</body>
+</html>
